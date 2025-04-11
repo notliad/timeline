@@ -2,6 +2,8 @@
 
 A React component for visualizing items on a timeline with multiple interactive features.
 
+![image](https://github.com/user-attachments/assets/07de78a4-cf68-4ae1-96b4-db1ec35325cc)
+
 ## Installation and Setup
 
 This project was built using Vite for a lightweight and simple build process.
@@ -19,6 +21,9 @@ npm install
 # Run the development server
 npm run dev
 ```
+
+## Development Tools
+I utilized Cursor with Claude Sonnet 3.7 to assist with component structures and help with more complex interactions.
 
 ## Features
 
