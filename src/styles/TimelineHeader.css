@@ -1,0 +1,67 @@
+.timeline-header {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 0;
+  z-index: 5;
+  height: 50px;
+}
+
+.timeline-dates {
+  position: relative;
+  height: 100%;
+}
+
+.timeline-date-marker {
+  position: absolute;
+  height: 100%;
+}
+
+.timeline-date-line {
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background-color: #ccc;
+  left: 0;
+}
+
+/* Styles for month markers */
+.month-marker .timeline-date-line,
+.month-line {
+  width: 2px;
+  background-color: #666;
+  height: 100%;
+}
+
+/* Styles for 5th day markers */
+.fifth-day-marker .timeline-date-line,
+.fifth-day-line {
+  height: 60%;
+  bottom: 0;
+  background-color: #aaa;
+}
+
+.timeline-date-label {
+  position: absolute;
+  font-size: 11px;
+  top: 10px;
+  left: 5px;
+  white-space: nowrap;
+  color: #666;
+}
+
+/* Special formatting for month labels */
+.month-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  text-transform: capitalize;
+}
+
+/* Formatting for 5th day labels */
+.fifth-day-label {
+  font-size: 10px;
+  color: #888;
+  top: 30px;
+} 

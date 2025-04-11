@@ -1,0 +1,86 @@
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-controls,
+.navigation-controls {
+  display: flex;
+  align-items: center;
+}
+
+.timeline-controls button {
+  margin: 0 5px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.timeline-controls button:hover {
+  background-color: #0056b3;
+}
+
+.timeline-controls span {
+  margin: 0 10px;
+  font-size: 14px;
+  min-width: 50px;
+  text-align: center;
+}
+
+.timeline-wrapper {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  height: auto;
+  user-select: none;
+}
+
+.timeline-wrapper.dragging {
+  cursor: grabbing;
+}
+
+.timeline-inner {
+  position: relative;
+}
+
+.timeline-lanes {
+  position: relative;
+}
+
+.timeline-lane {
+  position: relative;
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+}
+
+.timeline-lane:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.timeline-loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+} 

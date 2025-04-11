@@ -1,0 +1,105 @@
+.timeline-item {
+  position: absolute;
+  height: 50px;
+  background-color: #4a92e6;
+  border-radius: 4px;
+  color: white;
+  padding: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-item:hover {
+  background-color: #3a7ac0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.timeline-item.dragging {
+  opacity: 0.8;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  cursor: grabbing;
+}
+
+.timeline-item-content {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  cursor: grab;
+}
+
+.timeline-item-name {
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.timeline-item-dates {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.timeline-item input {
+  width: 90%;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 12px;
+  outline: none;
+  padding: 0;
+}
+
+.timeline-item-resize-handle {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 20;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.timeline-item:hover .timeline-item-resize-handle {
+  opacity: 1;
+}
+
+.timeline-item-resize-handle.left {
+  left: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent);
+}
+
+.timeline-item-resize-handle.right {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent);
+}
+
+/* Add visual feedback for dragging states */
+.timeline-item.dragging .timeline-item-content {
+  cursor: grabbing;
+}
+
+/* Different colors based on duration */
+.timeline-item.short-duration {
+  background-color: #4CAF50; /* Green for short items */
+}
+
+.timeline-item.medium-duration {
+  background-color: #FF9800; /* Orange for medium items */
+}
+
+.timeline-item.long-duration {
+  background-color: #F44336; /* Red for long items */
+} 
