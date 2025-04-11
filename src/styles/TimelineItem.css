@@ -1,24 +1,49 @@
+/* Theme Colors */
+:root {
+  /* Light theme item colors */
+  --item-short-light: #4CAF50;
+  --item-medium-light: #FF9800;
+  --item-long-light: #F44336;
+  --item-text-light: white;
+  --item-border-light: rgba(0, 0, 0, 0.2);
+  
+  /* Dark theme item colors */
+  --item-short-dark: #2E7D32;
+  --item-medium-dark: #E65100;
+  --item-long-dark: #C62828;
+  --item-text-dark: #f0f0f0;
+  --item-border-dark: rgba(255, 255, 255, 0.2);
+  
+  /* Popup colors */
+  --popup-bg-light: #333;
+  --popup-text-light: white;
+  --popup-bg-dark: #222;
+  --popup-text-dark: #e0e0e0;
+}
+
+/* Light Mode Styles */
 .timeline-item {
   position: absolute;
   height: 50px;
   background-color: #4a92e6;
   border-radius: 4px;
-  color: white;
+  color: var(--item-text-light);
   padding: 5px;
   box-sizing: border-box;
-  cursor: pointer;
+  cursor: grab;
   transition: background-color 0.2s, box-shadow 0.2s;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .timeline-item:hover {
   background-color: #3a7ac0;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-  z-index: 10;
+  z-index: 99;
 }
 
 .timeline-item.dragging {
@@ -37,7 +62,6 @@
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  cursor: grab;
 }
 
 .timeline-item-name {
@@ -55,7 +79,7 @@
   width: 90%;
   border: none;
   background: transparent;
-  color: white;
+  color: var(--item-text-light);
   font-size: 12px;
   outline: none;
   padding: 0;
@@ -78,28 +102,209 @@
 
 .timeline-item-resize-handle.left {
   left: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent);
+  background: linear-gradient(to right, var(--item-border-light), transparent);
 }
 
 .timeline-item-resize-handle.right {
   right: 0;
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent);
+  background: linear-gradient(to left, var(--item-border-light), transparent);
 }
 
 /* Add visual feedback for dragging states */
-.timeline-item.dragging .timeline-item-content {
+.timeline-item.dragging {
   cursor: grabbing;
+}
+
+.timeline-item.dragging * {
+  cursor: grabbing !important;
 }
 
 /* Different colors based on duration */
 .timeline-item.short-duration {
-  background-color: #4CAF50; /* Green for short items */
+  background-color: var(--item-short-light);
 }
 
 .timeline-item.medium-duration {
-  background-color: #FF9800; /* Orange for medium items */
+  background-color: var(--item-medium-light);
 }
 
 .timeline-item.long-duration {
-  background-color: #F44336; /* Red for long items */
+  background-color: var(--item-long-light);
+}
+
+/* Specific styles for different drag modes */
+.timeline-item.dragging-move {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(255, 255, 255, 0.1) 5px,
+    rgba(255, 255, 255, 0.1) 10px
+  );
+}
+
+.timeline-item.dragging-start {
+  border-left: 3px dashed white;
+}
+
+.timeline-item.dragging-end {
+  border-right: 3px dashed white;
+}
+
+/* Drag indicator styles */
+.drag-indicator {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--popup-bg-light);
+  color: var(--popup-text-light);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 30;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.drag-indicator.start {
+  left: 0;
+  transform: none;
+}
+
+.drag-indicator.end {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* Small item styles */
+.timeline-item.small-item {
+  min-width: 10px;
+  overflow: visible; /* Allow popup to overflow */
+}
+
+.timeline-item.small-item .timeline-item-content {
+  opacity: 0.5; /* Slightly hide content that doesn't fit */
+}
+
+.timeline-item.small-item:hover .timeline-item-content {
+  opacity: 1;
+}
+
+/* Popup for small items */
+.timeline-item-popup {
+  position: absolute;
+  top: -62px; /* Position above the item */
+  left: 0;
+  min-width: 150px;
+  max-width: 250px;
+  background-color: var(--popup-bg-light);
+  color: var(--popup-text-light);
+  padding: 8px 12px;
+  border-radius: 4px;
+  z-index: 200;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  pointer-events: none; /* Prevent it from blocking mouse events */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.timeline-item-popup::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--popup-bg-light);
+  transform: rotate(45deg);
+}
+
+.timeline-item-popup-name {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 4px;
+  white-space: normal; /* Allow wrapping */
+}
+
+.timeline-item-popup-dates {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* Make sure popup doesn't go off the right edge */
+.timeline-item.small-item:nth-last-child(-n+3) .timeline-item-popup {
+  right: 0;
+  left: auto;
+}
+
+.timeline-item.small-item:nth-last-child(-n+3) .timeline-item-popup::after {
+  left: auto;
+  right: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Styles */
+.timeline-item.dark {
+  background-color: #3c8cd6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  color: var(--item-text-dark);
+}
+
+.timeline-item.dark:hover {
+  background-color: #2d6eaf;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-item.dark input {
+  color: var(--item-text-dark);
+}
+
+.timeline-item-resize-handle.dark.left {
+  background: linear-gradient(to right, var(--item-border-dark), transparent);
+}
+
+.timeline-item-resize-handle.dark.right {
+  background: linear-gradient(to left, var(--item-border-dark), transparent);
+}
+
+/* Different colors based on duration - dark mode */
+.timeline-item.dark.short-duration {
+  background-color: var(--item-short-dark);
+}
+
+.timeline-item.dark.medium-duration {
+  background-color: var(--item-medium-dark);
+}
+
+.timeline-item.dark.long-duration {
+  background-color: var(--item-long-dark);
+}
+
+/* Popup for small items - dark mode */
+.timeline-item-popup.dark {
+  background-color: var(--popup-bg-dark);
+  color: var(--popup-text-dark);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-item-popup.dark::after {
+  background-color: var(--popup-bg-dark);
+}
+
+/* Drag indicator styles - dark mode */
+.timeline-item.dark .drag-indicator {
+  background-color: var(--popup-bg-dark);
+  color: var(--popup-text-dark);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 } 
