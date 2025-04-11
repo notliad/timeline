@@ -1,6 +1,6 @@
 import '../styles/TimelineHeader.css';
 
-const TimelineHeader = ({ start, end, zoomLevel }) => {
+const TimelineHeader = ({ start, end, zoomLevel, darkMode }) => {
   // Generate an array of dates between start and end date
   const generateDates = () => {
     const dates = [];
@@ -71,7 +71,7 @@ const TimelineHeader = ({ start, end, zoomLevel }) => {
   };
 
   return (
-    <div className="timeline-header">
+    <div className={`timeline-header ${darkMode ? 'dark' : ''}`}>
       <div className="timeline-dates">
         {dateMarkersToShow.map((date) => {
           const position = (dates.findIndex(d => d.getTime() === date.getTime()) / totalDays) * 100;
@@ -81,11 +81,11 @@ const TimelineHeader = ({ start, end, zoomLevel }) => {
           return (
             <div 
               key={date.toISOString()} 
-              className={`timeline-date-marker ${isMonth ? 'month-marker' : isFifth ? 'fifth-day-marker' : 'day-marker'}`}
+              className={`timeline-date-marker ${isMonth ? 'month-marker' : isFifth ? 'fifth-day-marker' : 'day-marker'} ${darkMode ? 'dark' : ''}`}
               style={{ left: `${position}%` }}
             >
-              <div className={`timeline-date-line ${isMonth ? 'month-line' : isFifth ? 'fifth-day-line' : ''}`}></div>
-              <div className={`timeline-date-label ${isMonth ? 'month-label' : isFifth ? 'fifth-day-label' : ''}`}>
+              <div className={`timeline-date-line ${isMonth ? 'month-line' : isFifth ? 'fifth-day-line' : ''} ${darkMode ? 'dark' : ''}`}></div>
+              <div className={`timeline-date-label ${isMonth ? 'month-label' : isFifth ? 'fifth-day-label' : ''} ${darkMode ? 'dark' : ''}`}>
                 {formatDate(date)}
               </div>
             </div>

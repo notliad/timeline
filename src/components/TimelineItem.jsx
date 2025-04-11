@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import '../styles/TimelineItem.css';
 
-const TimelineItem = ({ item, timeRange }) => {
+const TimelineItem = ({ item, timeRange, darkMode }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [itemName, setItemName] = useState(item.name);
   const [isDragging, setIsDragging] = useState(false);
   const [dragType, setDragType] = useState(null); // 'start', 'end', or 'move'
   const [itemDates, setItemDates] = useState({ start: item.start, end: item.end });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isSmallItem, setIsSmallItem] = useState(false);
   
   const itemRef = useRef(null);
+  const contentRef = useRef(null);
   const dragStartPosRef = useRef(null);
   const originalDatesRef = useRef({ start: item.start, end: item.end });
 
@@ -35,6 +38,15 @@ const TimelineItem = ({ item, timeRange }) => {
     if (durationDays <= 14) return 'medium-duration';
     return 'long-duration';
   };
+
+  // Check if the item is too small to display the content properly
+  useEffect(() => {
+    if (itemRef.current && contentRef.current) {
+      const itemWidth = itemRef.current.offsetWidth;
+      const contentWidth = contentRef.current.scrollWidth;
+      setIsSmallItem(itemWidth < contentWidth || itemWidth < 100);
+    }
+  }, [width, itemDates, itemName]);
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -68,6 +80,19 @@ const TimelineItem = ({ item, timeRange }) => {
       setIsEditing(false);
       setItemName(item.name); // Reset to original name
     }
+  };
+
+  const handleItemMouseDown = (e) => {
+    // Ignore if we're clicking on a resize handle or if we're editing
+    if (
+      e.target.classList.contains('timeline-item-resize-handle') || 
+      isEditing
+    ) {
+      return;
+    }
+    
+    // Otherwise, we're moving the entire item
+    handleMouseDown(e, 'move');
   };
 
   const handleMouseDown = (e, type) => {
@@ -157,6 +182,15 @@ const TimelineItem = ({ item, timeRange }) => {
     }
   };
 
+  // Mouse enter/leave handlers for pop-out effect
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
   // Clean up listeners when component unmounts
   useEffect(() => {
     return () => {
@@ -181,20 +215,40 @@ const TimelineItem = ({ item, timeRange }) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
+  // Get the drag status label
+  const getDragStatusLabel = () => {
+    if (!isDragging) return null;
+    
+    switch (dragType) {
+      case 'move':
+        return <div className="drag-indicator move">Moving</div>;
+      case 'start':
+        return <div className="drag-indicator start">Adjusting start</div>;
+      case 'end':
+        return <div className="drag-indicator end">Adjusting end</div>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div 
       ref={itemRef}
-      className={`timeline-item ${getDurationClass()} ${isDragging ? 'dragging' : ''}`}
+      className={`timeline-item ${getDurationClass()} ${isDragging ? 'dragging' : ''} ${isDragging ? `dragging-${dragType}` : ''} ${isSmallItem ? 'small-item' : ''} ${isHovering && isSmallItem ? 'hovering' : ''} ${darkMode ? 'dark' : ''}`}
       style={{ left, width }}
       onDoubleClick={handleDoubleClick}
+      onMouseDown={handleItemMouseDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      title={isSmallItem ? `${itemName} (${formatDisplayDate(itemDates.start)} - ${formatDisplayDate(itemDates.end)})` : ''}
     >
       <div 
-        className="timeline-item-resize-handle left"
+        className={`timeline-item-resize-handle left ${darkMode ? 'dark' : ''}`}
         onMouseDown={(e) => handleMouseDown(e, 'start')}
         title="Drag to change start date"
       ></div>
       
-      <div className="timeline-item-content">
+      <div className={`timeline-item-content ${darkMode ? 'dark' : ''}`} ref={contentRef}>
         {isEditing ? (
           <input
             type="text"
@@ -203,26 +257,36 @@ const TimelineItem = ({ item, timeRange }) => {
             onBlur={handleNameBlur}
             onKeyDown={handleKeyDown}
             autoFocus
+            className={darkMode ? 'dark' : ''}
           />
         ) : (
-          <div 
-            className="timeline-item-name"
-            onMouseDown={(e) => handleMouseDown(e, 'move')}
-            title="Drag to move item"
-          >
+          <div className={`timeline-item-name ${darkMode ? 'dark' : ''}`}>
             {itemName}
           </div>
         )}
-        <div className="timeline-item-dates">
+        <div className={`timeline-item-dates ${darkMode ? 'dark' : ''}`}>
           {formatDisplayDate(itemDates.start)} - {formatDisplayDate(itemDates.end)}
         </div>
+        {getDragStatusLabel()}
       </div>
       
       <div 
-        className="timeline-item-resize-handle right"
+        className={`timeline-item-resize-handle right ${darkMode ? 'dark' : ''}`}
         onMouseDown={(e) => handleMouseDown(e, 'end')}
         title="Drag to change end date"
       ></div>
+
+      {/* Popup content for small items */}
+      {isSmallItem && isHovering && (
+        <div className={`timeline-item-popup ${darkMode ? 'dark' : ''}`}>
+          <div className={`timeline-item-popup-content ${darkMode ? 'dark' : ''}`}>
+            <div className={`timeline-item-popup-name ${darkMode ? 'dark' : ''}`}>{itemName}</div>
+            <div className={`timeline-item-popup-dates ${darkMode ? 'dark' : ''}`}>
+              {formatDisplayDate(itemDates.start)} - {formatDisplayDate(itemDates.end)}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
